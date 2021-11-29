@@ -1,13 +1,13 @@
 const Manager = require('../lib/Manager.js')
 
 test('creates manager', ( ) => {
-  const John = new Manager('John', 35422, 'fake@email.com', 415);
+  const manager = new Manager('John', 35422, 'John@manager.com', 555-5555);
 
   
 
-  expect(John.name).toBe("John")
-  expect(John.getRole()).toBe("Manager")
-  expect(John.id).toBe(35422)
-  expect(John.email).toBe("fake@email.com")
-  expect(John.officeNumber).toBe(415)
+  expect(manager.name).toBe("John")
+  expect(manager.getRole()).toBe("Manager")
+  expect(manager.id).toBe(35422)
+  expect(manager.email).toBe("John@manager.com")
+  expect(manager.officeNumber).toBe(555-5555)
 });

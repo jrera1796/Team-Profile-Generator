@@ -1,67 +1,78 @@
-const inquirer = require('inquirer')
-const Employee = require('./lib/Employee')
-let slightTempArr = [];
-let eTempArr = [];
+const inquirer = require('inquirer');
+const fs = require("fs");
+const { genManagerCard, genEngineerCards, genInternCards } = require("./src/genCard")
+
+const genHTML = require('./src/genHTML');
+const Manager = require('./lib/Manager');
+const Intern = require('./lib/Intern');
+const Engineer = require('./lib/Engineer');
+
 inquirer.registerPrompt("loop", require("inquirer-loop")(inquirer))
 
 const inquireQA = ([
   {
     type: 'input',
-    name: 'teamManName',
+    name: 'managerName',
     message: "Please enter the name of the team's Manager"
   },
   {
     type: 'input',
-    name: 'teamManID',
+    name: 'managerID',
     message: "What is the Manager's Employee ID?"
   },
   {
     type: 'input',
-    name: 'teamManEmail',
+    name: 'managerEmail',
     message: "What is the Manager's Email?"
   },
   {
     type: 'input',
-    name: 'teamManOfficeNum',
+    name: 'officeNum',
     message: "What is the office number?"
   },
   {
     type: 'loop',
-    name: 'teamArr',
+    name: 'employees',
     message: "Great! This has been saved. Would you like to add another employee?",
     questions: [
       {
         type: 'list',
-        name: 'teamEmpType',
+        name: 'type',
         message: 'Which type of employee would you like to add?',
         choices: ["Intern", "Engineer"]
       },
 
       {
         type: 'input',
-        name: 'teamEmpName',
+        name: 'empName',
         message: 'Please enter a name?',
 
       },
       {
         type: 'input',
-        name: 'teamEmpID',
-        message: (answers) => `What is ${answers.teamEmpName}'s Employee ID Number?`,
+        name: 'empId',
+        message: (answers) => `What is ${answers.name}'s Employee ID Number?`,
+
+      },
+      {
+        type: 'input',
+        name: 'empEmail',
+        message: (answers) => `What is ${answers.name}'s Email?`,
 
       },
       {
         type: 'input',
         name: 'engGithub',
-        message: (answers) => `Please enter the github username for ${answers.teamEmpName}`,
-        when: answers => answers.teamEmpType === "Engineer"
+        message: (answers) => `Please enter the github username for ${answers.name}`,
+        when: answers => answers.type === "Engineer"
       },
       {
         type: 'input',
         name: 'intSchool',
-        message: (answers) => `Please enter the school ${answers.teamEmpName} is attending.`,
-        when: answers => answers.teamEmpType === "Intern"
+        message: (answers) => `Please enter the school ${answers.name} is attending.`,
+        when: answers => answers.type === "Intern"
       }
-      
+
     ]
   }
 
@@ -71,19 +82,41 @@ const inquireQA = ([
 ]);
 
 
-async function inquirerStart() {
-  try {
-    const response = await inquirer.prompt(inquireQA)
-    console.log("Response Received");
-    if (response.teamArr) {
-      console.log(response.teamArr)
-      const temp = response;
-      slightTempArr.push(temp);
-    }
-    console.log(slightTempArr);
-  } catch (err) {
-    console.log(err)
-  }
-}
+inquirer.prompt(inquireQA).then((response) => {
 
-inquirerStart();
+
+  const manager = new Manager(response.managerName, response.managerID, response.managerEmail, response.officeNum)
+  const employees = response.employees
+  const engineers = []
+  const interns = []
+
+  for(let i = 0; i < employees.length; i++) {
+      const e = employees[i]
+      if (e.type === "Engineer") {
+          const engineer = new Engineer(e.empName, e.empId, e.empEmail, e.engGithub)
+          engineers.push(engineer)
+      } else if (e.type === "Intern") {
+          const intern = new Intern(e.empName, e.empId, e.empEmail, e.intSchool)
+          interns.push(intern)
+      }
+  }
+  const managerCard = genManagerCard(manager)
+  const engineerCards = genEngineerCards(engineers)
+  const internCards = genInternCards(interns)
+  console.log(interns)
+
+  const html = genHTML(managerCard, engineerCards, internCards)
+  fs.writeFile('index.html', html, (err) =>
+    err ? console.error(err) : console.log('Success!')
+  );
+})
+
+
+
+
+
+
+
+
+
+
