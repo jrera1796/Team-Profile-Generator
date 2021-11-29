@@ -51,25 +51,25 @@ const inquireQA = ([
       {
         type: 'input',
         name: 'empId',
-        message: (answers) => `What is ${answers.name}'s Employee ID Number?`,
+        message: (answers) => `What is ${answers.empName}'s Employee ID Number?`,
 
       },
       {
         type: 'input',
         name: 'empEmail',
-        message: (answers) => `What is ${answers.name}'s Email?`,
+        message: (answers) => `What is ${answers.empName}'s Email?`,
 
       },
       {
         type: 'input',
         name: 'engGithub',
-        message: (answers) => `Please enter the github username for ${answers.name}`,
+        message: (answers) => `Please enter the github username for ${answers.empName}`,
         when: answers => answers.type === "Engineer"
       },
       {
         type: 'input',
         name: 'intSchool',
-        message: (answers) => `Please enter the school ${answers.name} is attending.`,
+        message: (answers) => `Please enter the school ${answers.empName} is attending.`,
         when: answers => answers.type === "Intern"
       }
 
@@ -103,11 +103,11 @@ inquirer.prompt(inquireQA).then((response) => {
   const managerCard = genManagerCard(manager)
   const engineerCards = genEngineerCards(engineers)
   const internCards = genInternCards(interns)
-  console.log(interns)
+  
 
   const html = genHTML(managerCard, engineerCards, internCards)
-  fs.writeFile('index.html', html, (err) =>
-    err ? console.error(err) : console.log('Success!')
+  fs.writeFile('./dist/index.html', html, (err) =>
+    err ? console.error(err) : console.log('Index.html has been created.')
   );
 })
 
