@@ -3,7 +3,7 @@
 # Team-Profile-Generator
 
 ## Description
-### ReadMe Generator simplifies the process of creating a professional readme file for your project
+### Team Profile Generator assists in the creation of a web page to display the employees in your company. Just fill in the prompts with the people on your team!
 
 <br>
 
@@ -26,7 +26,7 @@ https://watch.screencastify.com/v/JA85BSGBuuB7IUb670QC
 ## Usage
 ### On the command line type the following command 
 - node index.js.
-#### This will bring up prompts to help you fill add the employees on your team.
+#### This will bring up prompts to allow you to add the employees on your team.
 
 <br>
 
